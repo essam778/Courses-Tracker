@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>Course Tracker</title>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Playfair+Display:wght@700;900&family=Bebas+Neue&family=Righteous&display=swap" rel="stylesheet">
@@ -187,6 +188,21 @@
     <div class="modal-actions">
       <button class="btn-secondary" id="deleteCancelBtn">لأ، ارجع</button>
       <button class="btn-primary" style="background:linear-gradient(135deg,#ef476f,#ff6b9d)!important;color:#fff!important" id="deleteConfirmBtn">نعم، احذف</button>
+    </div>
+  </div>
+</div>
+
+<!-- Add Note Modal -->
+<div class="modal-overlay" id="noteModal">
+  <div class="modal">
+    <div class="modal-title">📝 إضافة ملاحظة</div>
+    <div class="field">
+      <label>ملاحظتك</label>
+      <textarea id="noteText" rows="4" placeholder="اكتب ملاحظتك هنا..."></textarea>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="document.getElementById('noteModal').classList.remove('show')">إلغاء</button>
+      <button class="btn-primary" onclick="confirmAddNote()">حفظ ✓</button>
     </div>
   </div>
 </div>

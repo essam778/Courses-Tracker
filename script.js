@@ -135,14 +135,14 @@ function renderDash(){
         const sc=c.done.length===c.total?c.color:c.done.length>0?'var(--a2)':'var(--muted)';
         return `<div class="course-dash-item" onclick="openCourse('${c.id}')">
           <div class="course-dash-header">
-            <div class="course-dash-name">${c.name}</div>
+            <div class="course-dash-name">${escapeHtml(c.name)}</div>
             <div class="course-dash-pct" style="color:${c.color}">${p}%</div>
           </div>
           <div class="mini-bar"><div class="mini-bar-fill" style="width:${p}%;background:linear-gradient(90deg,${c.color},${c.color}88)"></div></div>
           <div class="course-dash-meta">
             <span>${c.done.length}/${c.total} ${tl(c.type)}</span>
             <span style="color:${sc}">${sl}</span>
-            ${c.instructor?`<span>👤 ${c.instructor}</span>`:''}
+            ${c.instructor?`<span>👤 ${escapeHtml(c.instructor)}</span>`:''}
           </div>
         </div>`;
       }).join('')}
@@ -172,7 +172,7 @@ function renderCourse(){
       <div class="notes-list">
         ${c.notes.map((note, idx) => `
           <div class="note-item">
-            <div class="note-content">${note.text}</div>
+            <div class="note-content">${escapeHtml(note.text)}</div>
             <div class="note-meta">${note.date}
               <button onclick="deleteNote('${c.id}', ${idx})" style="margin-right: 10px; color: #ef476f; background: none; border: none; cursor: pointer; font-size: 12px;">
                 🗑️
@@ -190,10 +190,13 @@ function renderCourse(){
       <div class="course-header-bg">📖</div>
       <div style="display:flex;justify-content:space-between;align-items:flex-start">
         <div>
-          <div class="course-title" style="color:${c.color}">${c.name}</div>
-          <div class="course-subtitle">${c.instructor||'&nbsp;'}</div>
+          <div class="course-title" style="color:${c.color}">${escapeHtml(c.name)}</div>
+          <div class="course-subtitle">${escapeHtml(c.instructor)||'&nbsp;'}</div>
         </div>
-        <button onclick="confirmDel('${c.id}')" style="background:rgba(239,71,111,.15);border:1px solid rgba(239,71,111,.3);color:#ef476f;border-radius:8px;padding:6px 12px;cursor:pointer;font-size:12px;font-family:Cairo,sans-serif">🗑️ حذف</button>
+        <div style="display:flex;gap:8px">
+          ${c.link?`<a href="${escapeHtml(c.link)}" target="_blank" style="background:rgba(108,99,255,.15);border:1px solid rgba(108,99,255,.3);color:#6c63ff;border-radius:8px;padding:6px 12px;cursor:pointer;font-size:12px;font-family:Cairo,sans-serif;text-decoration:none;display:inline-flex;align-items:center;gap:4px">🔗 ذهاب</a>`:''}
+          <button onclick="confirmDel('${c.id}')" style="background:rgba(239,71,111,.15);border:1px solid rgba(239,71,111,.3);color:#ef476f;border-radius:8px;padding:6px 12px;cursor:pointer;font-size:12px;font-family:Cairo,sans-serif">🗑️ حذف</button>
+        </div>
       </div>
       <div class="course-stats-row">
         <div class="cstat"><div class="cstat-num" style="color:${c.color}">${p}%</div><div class="cstat-lbl">مكتمل</div></div>
@@ -277,16 +280,29 @@ document.getElementById('modalSave').onclick=()=>{
 };
 
 // Notes functions
+let noteCourseId = null;
 function addNote(courseId){
-  const text = prompt('اكتب ملاحظتك:');
-  if(text && text.trim()){
-    const course = state.courses.find(c => c.id === courseId);
+  noteCourseId = courseId;
+  document.getElementById('noteText').value = '';
+  document.getElementById('noteModal').classList.add('show');
+  document.getElementById('noteText').focus();
+}
+
+function confirmAddNote(){
+  const text = document.getElementById('noteText').value.trim();
+  if(!text){
+    showToast('❌ اكتب ملاحظة أولاً');
+    return;
+  }
+  const course = state.courses.find(c => c.id === noteCourseId);
+  if(course){
     if(!course.notes) course.notes = [];
     course.notes.push({
-      text: text.trim(),
+      text: text,
       date: new Date().toLocaleDateString('ar-EG')
     });
     saveData(state);
+    document.getElementById('noteModal').classList.remove('show');
     render();
     showToast('📝 تم إضافة الملاحظة');
   }
@@ -370,6 +386,12 @@ function toggleGoal(goalId){
 }
 
 /* ══ HELPERS ══ */
+function escapeHtml(str) {
+  if (!str) return '';
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
 function showToast(msg){
   const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');
   clearTimeout(t._timer);t._timer=setTimeout(()=>t.classList.remove('show'),2500);

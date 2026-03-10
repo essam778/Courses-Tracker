@@ -501,14 +501,15 @@ body::before{
 .modal-title{font-size:17px;font-weight:700;margin-bottom:18px;font-family:var(--hf)}
 .field{margin-bottom:14px}
 .field label{display:block;font-size:11px;color:var(--muted);margin-bottom:5px;font-weight:700;letter-spacing:.5px}
-.field input,.field select{
+.field input,.field select,.field textarea{
   width:100%;background:var(--surface2);border:1px solid var(--border);
   border-radius:10px;padding:10px 14px;color:var(--text);
   font-family:'Cairo',sans-serif;font-size:14px;outline:none;
   transition:border-color .2s,background .4s;
 }
-.field input:focus,.field select:focus{border-color:var(--a1)}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--a1)}
 .field input::placeholder{color:var(--muted)}
+.field textarea{resize:vertical;min-height:80px;font-family:inherit}
 .color-row{display:flex;gap:8px;flex-wrap:wrap}
 .color-opt{width:26px;height:26px;border-radius:50%;cursor:pointer;border:3px solid transparent;transition:all .2s}
 .color-opt.selected{border-color:#fff;transform:scale(1.2)}
