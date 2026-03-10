@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Course Tracker</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Playfair+Display:wght@700;900&family=Bebas+Neue&family=Righteous&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="manifest" href="manifest.json">
+</head>
+<body data-theme="cosmic" data-mode="dark">
+
+<!-- ═══ THEME BAR ═══ -->
+<div class="tbar" id="themeBar">
+  <div class="mode-toggle">
+    <button class="mbtn active" id="modeDark" onclick="setMode('dark')">🌙</button>
+    <button class="mbtn" id="modeLight" onclick="setMode('light')">☀️</button>
+  </div>
+
+  <button class="theme-selector-btn" onclick="showThemeModal()">
+    🎨 اختر لونك
+  </button>
+</div>
+
+<!-- Theme Selection Modal -->
+<div class="modal-overlay" id="themeModal">
+  <div class="modal">
+    <div class="modal-title">🎨 اختر لون التطبيق</div>
+    <div class="theme-grid">
+      <div class="theme-option" data-theme="cosmic" onclick="setTheme('cosmic')">
+        <div class="theme-colors">
+          <span style="background:#6c63ff"></span>
+          <span style="background:#00d4aa"></span>
+          <span style="background:#ff6b9d"></span>
+        </div>
+        <span>Cosmic</span>
+      </div>
+      <div class="theme-option" data-theme="amethyst" onclick="setTheme('amethyst')">
+        <div class="theme-colors">
+          <span style="background:#7A3F91"></span>
+          <span style="background:#C59DD9"></span>
+          <span style="background:#F2EAF7"></span>
+        </div>
+        <span>Amethyst</span>
+      </div>
+      <div class="theme-option" data-theme="topaz" onclick="setTheme('topaz')">
+        <div class="theme-colors">
+          <span style="background:#E6A520"></span>
+          <span style="background:#FFD77A"></span>
+          <span style="background:#7A4A00"></span>
+        </div>
+        <span>Topaz</span>
+      </div>
+      <div class="theme-option" data-theme="cyber" onclick="setTheme('cyber')">
+        <div class="theme-colors">
+          <span style="background:#00ffcc"></span>
+          <span style="background:#ff0080"></span>
+          <span style="background:#ffe600"></span>
+        </div>
+        <span>Cyber</span>
+      </div>
+      <div class="theme-option" data-theme="aurora" onclick="setTheme('aurora')">
+        <div class="theme-colors">
+          <span style="background:#00ff87"></span>
+          <span style="background:#60efff"></span>
+          <span style="background:#ff00ff"></span>
+        </div>
+        <span>Aurora</span>
+      </div>
+      <div class="theme-option" data-theme="ocean" onclick="setTheme('ocean')">
+        <div class="theme-colors">
+          <span style="background:#006d77"></span>
+          <span style="background:#83c5be"></span>
+          <span style="background:#edf6f9"></span>
+        </div>
+        <span>Ocean</span>
+      </div>
+      <div class="theme-option" data-theme="sunset" onclick="setTheme('sunset')">
+        <div class="theme-colors">
+          <span style="background:#ff9f1c"></span>
+          <span style="background:#ffbf69"></span>
+          <span style="background:#2ec4b6"></span>
+        </div>
+        <span>Sunset</span>
+      </div>
+      <div class="theme-option" data-theme="galaxy" onclick="setTheme('galaxy')">
+        <div class="theme-colors">
+          <span style="background:#7400b8"></span>
+          <span style="background:#5e60ce"></span>
+          <span style="background:#48bfe3"></span>
+        </div>
+        <span>Galaxy</span>
+      </div>
+      <div class="theme-option" data-theme="neon" onclick="setTheme('neon')">
+        <div class="theme-colors">
+          <span style="background:#ff00ff"></span>
+          <span style="background:#00ffff"></span>
+          <span style="background:#ffff00"></span>
+        </div>
+        <span>Neon</span>
+      </div>
+      <div class="theme-option" data-theme="forest" onclick="setTheme('forest')">
+        <div class="theme-colors">
+          <span style="background:#2d6a4f"></span>
+          <span style="background:#40916c"></span>
+          <span style="background:#52b788"></span>
+        </div>
+        <span>Forest</span>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-primary" onclick="document.getElementById('themeModal').classList.remove('show')">تم ✓</button>
+    </div>
+  </div>
+</div>
+
+<!-- Mark Up To Modal -->
+<div class="modal-overlay" id="markUpModal">
+  <div class="modal">
+    <div class="modal-title">📌 تحديد التقدم</div>
+    <div class="field">
+      <label>من 1 إلى رقم كام؟</label>
+      <input type="number" id="markUpToNum" placeholder="مثال: 15" min="1">
+    </div>
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="document.getElementById('markUpModal').classList.remove('show')">إلغاء</button>
+      <button class="btn-primary" onclick="confirmMarkUp()">تحديد ✓</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ NAV ═══ -->
+<nav class="nav">
+  <div class="nav-logo" id="navLogo">📚 TRACKER</div>
+  <div class="nav-actions">
+    <button class="nav-btn" id="addCourseBtn">+ كورس</button>
+  </div>
+</nav>
+
+<div class="tabs" id="tabsBar"></div>
+<div class="main" id="mainContent"></div>
+
+<!-- Add Course Modal -->
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <div class="modal-title">➕ إضافة كورس جديد</div>
+    <div class="field"><label>اسم الكورس</label><input type="text" id="mName" placeholder="مثال: JavaScript Course"></div>
+    <div class="field"><label>المدرس / المصدر</label><input type="text" id="mInstructor" placeholder="مثال: ElZero School"></div>
+    <div class="field"><label>رابط الكورس (اختياري)</label><input type="url" id="mLink" placeholder="https://youtube.com/..."></div>
+    <div class="field">
+      <label>نوع التقدم</label>
+      <select id="mType">
+        <option value="session">Sessions</option>
+        <option value="week">Weeks</option>
+        <option value="video">Videos</option>
+        <option value="lecture">Lectures</option>
+      </select>
+    </div>
+    <div class="field"><label>عدد الـ checkpoints</label><input type="number" id="mCount" placeholder="مثال: 30" min="1" max="200"></div>
+    <div class="field">
+      <label>لون الكورس</label>
+      <div class="color-row" id="colorRow">
+        <div class="color-opt selected" data-color="#6c63ff" style="background:#6c63ff"></div>
+        <div class="color-opt" data-color="#00d4aa" style="background:#00d4aa"></div>
+        <div class="color-opt" data-color="#ff6b9d" style="background:#ff6b9d"></div>
+        <div class="color-opt" data-color="#ffd166" style="background:#ffd166"></div>
+        <div class="color-opt" data-color="#7A3F91" style="background:#7A3F91"></div>
+        <div class="color-opt" data-color="#E6A520" style="background:#E6A520"></div>
+        <div class="color-opt" data-color="#00ffcc" style="background:#00ffcc"></div>
+        <div class="color-opt" data-color="#ff0080" style="background:#ff0080"></div>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-secondary" id="modalCancel">إلغاء</button>
+      <button class="btn-primary" id="modalSave">حفظ الكورس ✓</button>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Modal -->
+<div class="modal-overlay" id="deleteModal">
+  <div class="modal">
+    <div class="modal-title">🗑️ حذف الكورس</div>
+    <p style="color:var(--muted);font-size:14px;margin-bottom:20px;">هل أنت متأكد؟ التقدم هيتمسح برضو.</p>
+    <div class="modal-actions">
+      <button class="btn-secondary" id="deleteCancelBtn">لأ، ارجع</button>
+      <button class="btn-primary" style="background:linear-gradient(135deg,#ef476f,#ff6b9d)!important;color:#fff!important" id="deleteConfirmBtn">نعم، احذف</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="script.js"></script>
+</body>
+</html>
